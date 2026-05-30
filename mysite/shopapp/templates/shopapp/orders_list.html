@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <h1>{{ title|capfirst }}</h1>
+    
+    {% if orders %}
+        <p>Всего заказов: {{ orders|length }}</p>
+        
+        {% for order in orders %}
+            <div style="border: 1px solid #ccc; margin: 20px 0; padding: 15px; border-radius: 5px;">
+                <h3>Заказ #{{ order.id }}</h3>
+                <p><strong>Пользователь:</strong> {{ order.user.username }} ({{ order.user.email }})</p>
+                <p><strong>Статус:</strong> 
+                    <span style="
+                        {% if order.status == 'new' %}color: blue;{% endif %}
+                        {% if order.status == 'processing' %}color: orange;{% endif %}
+                        {% if order.status == 'completed' %}color: green;{% endif %}
+                        {% if order.status == 'cancelled' %}color: red;{% endif %}
+                    ">
+                        {{ order.get_status_display }}
+                    </span>
+                </p>
+                <p><strong>Комментарий:</strong> {{ order.comment|default:"—" }}</p>
+                <p><strong>Дата создания:</strong> {{ order.created_at|date:"d.m.Y H:i" }}</p>
+                <p><strong>Общая сумма:</strong> {{ order.get_total_price|floatformat:2 }} ₽</p>
+                
+                <h4>Товары в заказе:</h4>
+                <ul>
+                    {% for product in order.products.all %}
+                        <li>
+                            {{ product.name }} - {{ product.price }} ₽
+                            {% if not product.is_active %}
+                                <span style="color: red;">(неактивен)</span>
+                            {% endif %}
+                        </li>
+                    {% empty %}
+                        <li>Нет товаров</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Заказов пока нет.</p>
+    {% endif %}
+    
+    <p><a href="{% url 'shopapp:shop_index' %}">← На главную</a></p>
+{% endblock %}

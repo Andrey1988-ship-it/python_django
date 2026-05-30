@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <h1>{{ title|upper }}</h1>
+    
+    <h2>Доступные страницы:</h2>
+    <ul>
+        {% for page in pages %}
+            <li>
+                <a href="{{ page.url }}">{{ page.name }}</a>
+                {% if page.description %}
+                    <p><small>{{ page.description }}</small></p>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    
+    <p>Всего страниц: {{ pages|length }}</p>
+    <p>Текущая дата: {% now "d.m.Y H:i" %}</p>
+{% endblock %}
