@@ -1,21 +1,38 @@
 from django.shortcuts import render
-from datetime import datetime
+from django.contrib.auth.models import User
+from .models import Product, Order
 
 
-def product_list(request):
-    # Контекст с объектами
+def shop_index(request):
+    """Главная страница со списком ссылок"""
     context = {
-        'shop_name': 'Супер Маркет',
-        'products': [
-            {'id': 1, 'name': 'Ноутбук', 'price': 50000, 'in_stock': True, 'discount': 10},
-            {'id': 2, 'name': 'Мышь', 'price': 1500, 'in_stock': True, 'discount': 0},
-            {'id': 3, 'name': 'Клавиатура', 'price': 3000, 'in_stock': False, 'discount': 5},
-            {'id': 4, 'name': 'Монитор', 'price': 25000, 'in_stock': True, 'discount': 15},
-            {'id': 5, 'name': 'Наушники', 'price': 4500, 'in_stock': True, 'discount': 0},
+        'title': 'Магазин',
+        'pages': [
+            {'name': 'Товары', 'url': '/shop/products/', 'description': 'Список всех продуктов'},
+            {'name': 'Заказы', 'url': '/shop/orders/', 'description': 'Список всех заказов'},
+            {'name': 'Админ-панель', 'url': '/admin/', 'description': 'Управление данными'},
         ],
-        'current_time': datetime.now(),
-        'visitor_name': 'Гость',
-        'total_products': 5,
     }
-    
-    return render(request, 'shopapp/product_list.html', context)
+    return render(request, 'shopapp/shop_index.html', context)
+
+
+def products_list(request):
+    """Список продуктов"""
+    products = Product.objects.filter(is_active=True)
+    context = {
+        'title': 'Товары',
+        'products': products,
+        'total_products': products.count(),
+    }
+    return render(request, 'shopapp/products_list.html', context)
+
+
+def orders_list(request):
+    """Список заказов с загруженными пользователями и продуктами"""
+    orders = Order.objects.select_related('user').prefetch_related('products').all()
+    context = {
+        'title': 'Заказы',
+        'orders': orders,
+        'total_orders': orders.count(),
+    }
+    return render(request, 'shopapp/orders_list.html', context)
