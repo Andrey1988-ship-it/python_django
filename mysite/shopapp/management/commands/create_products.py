@@ -7,11 +7,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         products_data = [
-            {'name': 'Ноутбук Dell XPS 13', 'description': 'Мощный ультрабук', 'price': 89999.99, 'quantity': 10},
-            {'name': 'Мышь Logitech MX Master 3', 'description': 'Беспроводная мышь', 'price': 7999.00, 'quantity': 25},
-            {'name': 'Клавиатура Mechanical', 'description': 'Механическая клавиатура', 'price': 5499.50, 'quantity': 15},
-            {'name': 'Монитор Samsung 27"', 'description': '4K монитор', 'price': 29999.00, 'quantity': 5},
-            {'name': 'Наушники Sony WH-1000XM5', 'description': 'Беспроводные наушники', 'price': 24999.00, 'quantity': 8},
+            {'name': 'Брелок "Котик"', 'slug': 'brelok-kotik', 'description': 'Милый брелок в виде котика', 'price': 299.00, 'stock': 15, 'discount': 0, 'is_active': True},
+            {'name': 'Брелок "Сердечко"', 'slug': 'brelok-serdechko', 'description': 'Романтичный брелок-сердечко', 'price': 199.00, 'stock': 20, 'discount': 0, 'is_active': True},
+            {'name': 'Брелок "Машинка"', 'slug': 'brelok-mashinka', 'description': 'Брелок в форме автомобиля', 'price': 349.00, 'stock': 10, 'discount': 0, 'is_active': True},
+            {'name': 'Брелок "Смайлик"', 'slug': 'brelok-smaylik', 'description': 'Веселый брелок-смайлик', 'price': 149.00, 'stock': 30, 'discount': 5, 'is_active': True},
+            {'name': 'Брелок "Звезда"', 'slug': 'brelok-zvezda', 'description': 'Брелок в виде звезды', 'price': 249.00, 'stock': 25, 'discount': 10, 'is_active': True},
         ]
 
         created = 0
@@ -19,13 +19,18 @@ class Command(BaseCommand):
             product, is_created = Product.objects.get_or_create(
                 name=data['name'],
                 defaults={
+                    'slug': data['slug'],
                     'description': data['description'],
                     'price': data['price'],
-                    'quantity': data['quantity'],
+                    'stock': data['stock'],
+                    'discount': data['discount'],
+                    'is_active': data['is_active'],
                 }
             )
             if is_created:
                 created += 1
                 self.stdout.write(self.style.SUCCESS(f'✅ Создан: {product.name}'))
+            else:
+                self.stdout.write(self.style.WARNING(f'⚠️ Уже существует: {product.name}'))
 
         self.stdout.write(self.style.SUCCESS(f'\n📊 Создано продуктов: {created}'))
