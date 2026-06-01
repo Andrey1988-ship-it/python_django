@@ -29,7 +29,8 @@ def products_list(request):
 
 def orders_list(request):
     """Список заказов с загруженными пользователями и продуктами"""
-    orders = Order.objects.select_related('user').prefetch_related('products').all()
+    # Используем prefetch_related для items__product вместо products
+    orders = Order.objects.select_related('user').prefetch_related('items__product').all()
     context = {
         'title': 'Заказы',
         'orders': orders,
