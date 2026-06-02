@@ -84,3 +84,57 @@ class OrderItem(models.Model):
         # Приводим к Decimal для точного умножения
         from decimal import Decimal
         return Decimal(str(price)) * Decimal(str(quantity))
+
+
+# shopapp/models.py - исправленная модель UploadedFile
+
+class UploadedFile(models.Model):
+    """Модель для хранения загруженных файлов"""
+    file = models.FileField(
+        upload_to='uploads/%Y/%m/%d/',
+        verbose_name='Файл'
+    )
+    description = models.TextField(
+        blank=True,
+        verbose_name='Описание'
+    )
+    file_size = models.PositiveIntegerField(
+        editable=False,
+        verbose_name='Размер файла (байт)'
+    )
+    content_type = models.CharField(
+        max_length=100,
+        blank=True,  # Разрешаем пустое значение
+        editable=False,
+        verbose_name='Тип файла'
+    )
+    uploaded_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата загрузки'
+    )
+    uploaded_by = models.ForeignKey(
+        'auth.User',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name='Загрузил'
+    )
+
+    class Meta:
+        verbose_name = 'Загруженный файл'
+        verbose_name_plural = 'Загруженные файлы'
+        ordering = ['-uploaded_at']
+
+    def __str__(self):
+        return f"{self.file.name} ({self.file_size} байт)"
+
+    def save(self, *args, **kwargs):
+        # Сохраняем размер файла
+        if self.file:
+            self.file_size = self.file.size
+            # Пытаемся получить content_type, если есть
+            if hasattr(self.file, 'content_type'):
+                self.content_type = self.file.content_type
+            elif hasattr(self.file.file, 'content_type'):
+                self.content_type = self.file.file.content_type
+        super().save(*args, **kwargs)

@@ -1,6 +1,6 @@
-# shopapp/admin.py
+
 from django.contrib import admin
-from .models import Product, Order, OrderItem
+from .models import Product, Order, OrderItem, UploadedFile
 
 
 # Inline для отображения заказов на странице продукта
@@ -116,6 +116,13 @@ class OrderAdmin(admin.ModelAdmin):
 
     get_total_price.short_description = "Общая сумма"
 
+
+@admin.register(UploadedFile)
+class UploadedFileAdmin(admin.ModelAdmin):
+    list_display = ('file', 'file_size', 'content_type', 'uploaded_at', 'uploaded_by')
+    list_filter = ('content_type', 'uploaded_at')
+    search_fields = ('file', 'description')
+    readonly_fields = ('file_size', 'content_type', 'uploaded_at')
 
 # Регистрируем модели
 admin.site.register(Product, ProductAdmin)
