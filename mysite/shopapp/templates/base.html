@@ -49,10 +49,6 @@
             display: inline-block;
         }
 
-        nav div a {
-            padding: 5px 10px;
-        }
-
         main {
             max-width: 1200px;
             margin: 20px auto;
@@ -81,7 +77,6 @@
             margin: 20px 0 10px 0;
         }
 
-        /* Остальные стили остаются без изменений */
         .page-list {
             list-style: none;
             padding: 0;
@@ -250,23 +245,53 @@
         .btn:hover {
             background: #c0392b;
         }
+
+        .form-control {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #4caf50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+        }
     </style>
 </head>
 <body>
     <header>
         <nav>
-            <a href="{% url 'shopapp:shop_index' %}" style="font-weight: bold;">🏠 Главная</a>
-            <a href="{% url 'shopapp:products_list' %}">🛍️ Товары</a>
-            <a href="{% url 'shopapp:upload_file' %}">📤 Загрузить файл</a>
-            <a href="{% url 'shopapp:orders_list' %}">📦 Заказы</a>
-            <a href="{% url 'shopapp:throttle_test' %}">⏱️ Тест лимита</a>
-            <a href="/admin/">🔧 Админка</a>
+            <div>
+                <a href="{% url 'shopapp:shop_index' %}" style="font-weight: bold;">🏠 Главная</a>
+                <a href="{% url 'shopapp:products_list' %}">🛍️ Товары</a>
 
-            <div style="float: right;">
+                {% if user.is_staff %}
+                    <a href="{% url 'shopapp:product_create' %}">➕ Добавить товар</a>
+                    <a href="{% url 'shopapp:order_create_admin' %}">📝 Создать заказ</a>
+                {% endif %}
+
+                <a href="{% url 'shopapp:upload_file' %}">📤 Загрузить файл</a>
+                <a href="{% url 'shopapp:orders_list' %}">📦 Заказы</a>
+                <a href="{% url 'shopapp:throttle_test' %}">⏱️ Тест лимита</a>
+                <a href="/admin/">🔧 Админка</a>
+            </div>
+
+            <div>
                 {% if user.is_authenticated %}
                     👋 {{ user.username }}
+                    {% if user.is_staff %}
+                        <span style="background: #4caf50; color: white; padding: 2px 6px; border-radius: 3px; font-size: 0.7rem; margin-left: 5px;">admin</span>
+                    {% endif %}
+                    <a href="{% url 'admin:logout' %}" style="margin-left: 10px;">🚪 Выйти</a>
                 {% else %}
-                    <a href="/admin/login/">🔐 Вход</a>
+                    <a href="{% url 'admin:login' %}">🔐 Вход</a>
                 {% endif %}
             </div>
         </nav>

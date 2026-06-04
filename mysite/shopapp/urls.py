@@ -19,4 +19,9 @@ urlpatterns = [
     path('upload/', views.upload_file, name='upload_file'),
     path('upload/success/<int:file_id>/', views.upload_success, name='upload_success'),
     path('throttle-test/', views.throttle_test, name='throttle_test'),
+    path('product/create/', views.product_create, name='product_create'),
+    path('product/<int:product_id>/edit/', views.product_edit, name='product_edit'),
+
+    # Создание заказов (админское)
+    path('order/create-admin/', views.order_create_admin, name='order_create_admin'),
 ]

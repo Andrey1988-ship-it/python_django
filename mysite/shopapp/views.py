@@ -4,10 +4,10 @@ from django.contrib import messages
 from django.db import transaction
 from .models import Product, Order, OrderItem, UploadedFile
 from .cart import Cart
-from .forms import OrderCreateForm, FileUploadForm
+from .forms import OrderCreateForm, FileUploadForm, ProductCreateForm, AdminOrderCreateForm
 from django.contrib.auth.decorators import login_required
 from django.core.files.uploadedfile import UploadedFile as DjangoUploadedFile
-
+from django.contrib.admin.views.decorators import staff_member_required
 
 
 def shop_index(request):
@@ -161,3 +161,74 @@ def upload_success(request, file_id):
 def throttle_test(request):
     """Тестовая страница для проверки throttling"""
     return render(request, 'shopapp/throttle_test.html')
+
+
+@staff_member_required
+def product_create(request):
+    """Создание нового продукта (только для персонала)"""
+
+    if request.method == 'POST':
+        form = ProductCreateForm(request.POST, request.FILES)
+        if form.is_valid():
+            product = form.save(commit=False)
+            # Автоматически создаем slug если не указан
+            if not product.slug:
+                from django.utils.text import slugify
+                product.slug = slugify(product.name)
+            product.save()
+
+            messages.success(request, f'✅ Товар "{product.name}" успешно создан!')
+            return redirect('shopapp:product_detail', product_id=product.id)
+    else:
+        form = ProductCreateForm()
+
+    context = {
+        'form': form,
+        'title': 'Создание товара',
+        'button_text': 'Создать товар',
+    }
+    return render(request, 'shopapp/product_form.html', context)
+
+
+@staff_member_required
+def product_edit(request, product_id):
+    """Редактирование продукта"""
+    product = get_object_or_404(Product, id=product_id)
+
+    if request.method == 'POST':
+        form = ProductCreateForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'✅ Товар "{product.name}" успешно обновлен!')
+            return redirect('shopapp:product_detail', product_id=product.id)
+    else:
+        form = ProductCreateForm(instance=product)
+
+    context = {
+        'form': form,
+        'title': f'Редактирование товара: {product.name}',
+        'button_text': 'Сохранить изменения',
+        'product': product,
+    }
+    return render(request, 'shopapp/product_form.html', context)
+
+
+@staff_member_required
+def order_create_admin(request):
+    """Создание заказа администратором (без корзины)"""
+
+    if request.method == 'POST':
+        form = AdminOrderCreateForm(request.POST)
+        if form.is_valid():
+            order = form.save()
+            messages.success(request, f'✅ Заказ #{order.id} успешно создан!')
+            return redirect('shopapp:order_success', order_id=order.id)
+    else:
+        form = AdminOrderCreateForm()
+
+    context = {
+        'form': form,
+        'title': 'Создание заказа',
+        'button_text': 'Создать заказ',
+    }
+    return render(request, 'shopapp/order_form.html', context)
