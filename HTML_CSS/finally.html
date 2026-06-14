@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Размеры и отступы</title>
+    
+    <!-- Подключение шрифта Roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Применяем шрифт Roboto ко всем элементам */
+        * {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            background-color: rgb(246, 247, 249);
+        }
+
+        /* Стили для хедера */
+        header {
+            height: 100px;
+            padding: 0 40px;
+            background-color: white;
+        }
+        
+        header > div {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+        
+        /* Стили для ссылок меню */
+        header .menu-links a {
+            color: black;
+            text-decoration: none;
+            margin-right: 30px;
+        }
+        
+        header .menu-links a:hover {
+            text-decoration: underline;
+        }
+        
+        header .menu-links a:last-child {
+            margin-right: 0;
+        }
+
+        .fixed-container {
+            max-width: 1000px;
+            height: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        section {
+            padding: 40px;
+        }
+        
+        /* Первый блок - увеличенная высота */
+        .first-block {
+            height: 500px;
+            background-color: white;
+        }
+        
+        .first-block > div {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            background-image: url('static/man.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: right center;
+            height: 100%;
+        }
+        
+        /* Стили для заголовков */
+        h1 {
+            font-size: 48px;
+            margin: 0 0 20px 0;
+        }
+        
+        h2 {
+            font-size: 36px;
+            margin: 0 0 20px 0;
+        }
+        
+        .first-block p {
+            margin: 0 0 30px 0;
+            font-size: 18px;
+        }
+
+        .services {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .services > div {
+            width: 200px;
+            text-align: center;
+        }
+        
+        .services img {
+            width: 150px;
+            margin-bottom: 15px;
+        }
+
+        .price-info {
+            background-color: rgb(63, 42, 255);
+            color: white;
+        }
+        
+        /* Синий блок - ширина 50% */
+        .price-info .fixed-container {
+            width: 100%;
+        }
+        
+        .price-info h2 {
+            width: 50%;
+            margin: 0 0 20px 0;
+            font-size: 28px;
+        }
+        
+        .price-info p {
+            width: 50%;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* Блок с примерами работ */
+        .portfolio {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .portfolio-item {
+            width: 30%;
+            background-color: #f5f5f5;
+            border-radius: 10px;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        .portfolio-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .portfolio-item p {
+            padding: 15px;
+            margin: 0;
+        }
+
+        /* Стили для кнопок */
+        .light-button {
+            border: 1px solid black;
+            background-color: transparent;
+            border-radius: 5px;
+            padding: 10px 30px;
+            cursor: pointer;
+        }
+
+        button {
+            padding: 10px 30px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        
+        .dark-button {
+            background-color: rgb(63, 42, 255);
+            border: 1px solid rgb(63, 42, 255);
+            border-radius: 5px;
+            color: white;
+            padding: 10px 30px;
+            cursor: pointer;
+        }
+
+        /* Стили для футера */
+        footer {
+            padding: 40px;
+            background-color: white;
+        }
+        
+        footer .fixed-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 40px;
+        }
+        
+        .footer-menu, .footer-contacts, .footer-social {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .footer-menu a, .footer-contacts a, .footer-social a {
+            color: black;
+            text-decoration: none;
+        }
+        
+        .footer-menu a:hover, .footer-contacts a:hover, .footer-social a:hover {
+            text-decoration: underline;
+        }
+        
+        .footer-menu h4, .footer-contacts h4, .footer-social h4 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+        }
+        
+        .footer-contacts span {
+            margin-bottom: 5px;
+        }
+
+        /* Стили для попапа */
+        .popup-container {
+            background-color: rgba(88, 91, 99, 0.5);
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+        
+        .popup {
+            background-color: white;
+            width: 350px;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .popup h3 {
+            margin: 0 0 20px 0;
+        }
+        
+        .popup input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        
+        .popup button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background-color: rgb(63, 42, 255);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .popup .close-btn {
+            margin-top: 10px;
+            background-color: transparent;
+            border: 1px solid #ddd;
+            color: #333;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            header {
+                height: auto;
+                padding: 15px;
+            }
+            
+            header > div {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .services {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .portfolio {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .portfolio-item {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .price-info h2, .price-info p {
+                width: 100%;
+            }
+            
+            footer .fixed-container {
+                flex-direction: column;
+                text-align: center;
+                align-items: center;
+            }
+            
+            h1 {
+                font-size: 32px;
+            }
+            
+            h2 {
+                font-size: 28px;
+            }
+            
+            .first-block {
+                height: auto;
+                min-height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Попап -->
+    <div class="popup-container">
+        <div class="popup">
+            <h3>Заказать звонок</h3>
+            <form id="popupForm">
+                <input type="text" name="name" placeholder="Введите ваше имя" required>
+                <input type="email" name="email" placeholder="Введите ваш email" required>
+                <button type="submit">Отправить</button>
+                <button type="button" class="close-btn" onclick="document.querySelector('.popup-container').style.display='none'">Закрыть</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Хедер -->
+    <header>
+        <div class="fixed-container">
+            <div class="menu-links">  
+                <a href="#">Услуги</a>
+                <a href="#">Портфолио</a>
+                <a href="#">Стоимость</a>
+            </div>
+            <div>
+                <span>+7 909 999-55-44</span>
+                <button class="light-button open-popup">Заказать звонок</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Первый блок -->
+    <section class="first-block">
+        <div class="fixed-container">
+            <h1>Дмитрий Алексеев</h1>
+            <p>Frontend-разработчик и веб-верстальщик</p>
+            <button class="dark-button open-popup">Узнать больше</button>
+        </div>
+    </section>
+
+    <!-- Блок услуг -->
+    <section>
+        <div class="fixed-container">
+            <h2>Что я делаю</h2>
+            <div class="services">
+                <div>
+                    <img src="static/1.png" alt="Верстка">
+                    <p>Верстка лэндинг-страниц и сайтов любой сложности</p>
+                </div>
+                <div>
+                    <img src="static/2.png" alt="Адаптивная верстка">
+                    <p>Адаптивная верстка под все браузеры и устройства</p>
+                </div>
+                <div>
+                    <img src="static/3.png" alt="Frontend">
+                    <p>Frontend разработка и программирование</p>
+                </div>
+                <div>
+                    <img src="static/4.png" alt="Доработка">
+                    <p>Исправление и доработка существующей верстки</p>
+                </div>
+            </div>
+            <button class="light-button open-popup">Узнать стоимость</button>
+        </div>
+    </section>
+
+    <!-- Блок портфолио (примеры работ) -->
+    <section>
+        <div class="fixed-container">
+            <h2>Примеры работ</h2>
+            <div class="portfolio">
+                <div class="portfolio-item">
+                    <img src="static/e1.png" alt="Пример работы 1">
+                    <p>Сайт психолога Веры Антоновой</p>
+                </div>
+                <div class="portfolio-item">
+                    <img src="static/e2.png" alt="Пример работы 2">
+                    <p>Сайт магазина детской одежды </p>
+                </div>
+                <div class="portfolio-item">
+                    <img src="static/e3.png" alt="Пример работы 3">
+                    <p>Сайт магазина "Рыболов"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Синий блок -->
+    <section class="price-info">
+        <div class="fixed-container">
+            <h2>Адаптивная верстка под все устройства и браузеры от 1000 ₽ всего за 4 часа.</h2>
+            <p>Верстка проходит строгую проверку на всех устройствах и в популярных браузерах. Гарантия качества и соблюдения сроков.</p>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer>
+    <div class="fixed-container">
+        <!-- Меню -->
+        <div class="footer-menu">
+            <h3>Меню</h3>
+            <a href="#">Услуги</a>
+            <a href="#">Портфолио</a>
+            <a href="#">Стоимость</a>
+        </div>
+        
+        <!-- Контакты -->
+        <div class="footer-contacts">
+            <h4>Контакты</h4>
+            <span>+7 909 999-55-44</span>
+            <span>info@example.com</span>
+            <span>Москва, ул. Примерная, 123</span>
+        </div>
+        
+        <!-- Социальные сети с кнопкой -->
+        <div class="footer-social">
+            <button class="dark-button open-popup" style="margin-bottom: 20px; width: 100%;">📞 Заказать звонок</button>
+            <div class="social-icons">
+                <a href="#"><img src="static/vk.png" alt="VK" width="30"></a>
+                <a href="#"><img src="static/telegram.png" alt="Telegram" width="30"></a>
+                <a href="#"><img src="static/fb.png" width="30" alt="Facebook" ></a>
+                <a href="#"><img src="static/you.png" width="30" alt="YouTube"></a>
+                <a href="#"><img src="static/inst.png" width="30" alt="Instagram" ></a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <!-- Скрипт для попапа -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function(){
+            var container = document.querySelector('.popup-container');
+            var popupButtons = document.querySelectorAll('.open-popup');
+            
+            // Открытие попапа
+            for (let i = 0; i < popupButtons.length; i++) {
+                popupButtons[i].addEventListener('click', function(){
+                    container.style.display = 'flex';
+                });
+            }
+            
+            // Закрытие попапа при клике на внешнюю область
+            container.addEventListener('click', function(event){
+                if(event.target == container) {
+                    container.style.display = 'none';
+                }
+            });
+            
+            // Закрытие попапа при отправке формы
+            var popupForm = document.getElementById('popupForm');
+            if (popupForm) {
+                popupForm.addEventListener('submit', function(e){
+                    e.preventDefault();
+                    alert('Форма отправлена!');
+                    container.style.display = 'none';
+                    popupForm.reset();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
