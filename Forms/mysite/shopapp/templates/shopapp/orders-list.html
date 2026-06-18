@@ -10,24 +10,30 @@
     <div>
       {% for order in orders %}
         <div>
+          <p><a href="{% url 'shopapp:order_detail' pk=order.pk %}">Details #{{ order.pk }}</a></p>
           <p>Order by {% firstof order.user.first_name order.user.username %}</p>
           <p>Promocode: <code>{{ order.promocode }}</code></p>
           <p>Delivery address: {{ order.delivery_address }}</p>
           <div>
-            Product in order:
+            Products in order:
             <ul>
               {% for product in order.products.all %}
                 <li>{{ product.name }} for ${{ product.price }}</li>
               {% endfor %}
-
             </ul>
           </div>
-
+          <p>
+            <a href="{% url 'shopapp:order_update' pk=order.pk %}">✏️ Update</a>
+            <a href="{% url 'shopapp:order_delete' pk=order.pk %}">🗑️ Delete</a>
+          </p>
         </div>
       {% endfor %}
-
     </div>
   {% else %}
     <h3>No orders yet</h3>
   {% endif %}
+
+  <div>
+    <a href="{% url 'shopapp:order_create' %}">➕ Create new order</a>
+  </div>
 {% endblock %}

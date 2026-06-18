@@ -18,6 +18,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('shop/', include('shopapp.urls')),
+    path('', include('shopapp.urls')),      # 👈 ДОБАВЛЕНО (главная страница)
+    path('shop/', include('shopapp.urls')), # 👈 ОСТАВЛЯЕМ (для совместимости)
     path('req/', include('requestdataapp.urls')),
 ]
