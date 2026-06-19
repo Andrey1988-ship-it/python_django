@@ -1,0 +1,25 @@
+{% extends 'shopapp/base.html' %}
+
+{% block title %}
+  {% if object %}Update{% else %}Create{% endif %} Product
+{% endblock %}
+
+{% block body %}
+  <h1>{% if object %}Update{% else %}Create{% endif %} Product</h1>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% if object %}Update{% else %}Create{% endif %}</button>
+  </form>
+
+  <div>
+    <a href="{% url 'shopapp:products_list' %}">← Back to products list</a>
+  </div>
+
+  {% if object %}
+    <div>
+      <a href="{% url 'shopapp:product_detail' pk=object.pk %}">Cancel</a>
+    </div>
+  {% endif %}
+{% endblock %}
