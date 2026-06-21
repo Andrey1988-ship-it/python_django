@@ -1,0 +1,28 @@
+from django.urls import path
+from django.contrib.auth.views import LoginView
+from . import views
+
+app_name = 'myauth'
+
+urlpatterns = [
+    # Главная страница
+    path('', views.index_view, name='index'),
+
+    # Вход
+    path('login/', LoginView.as_view(
+        template_name='myauth/login.html',
+        redirect_authenticated_user=True,
+        next_page='/',
+    ), name='login'),
+
+    # Выход
+    path('logout/', views.CustomLogoutView.as_view(), name='logout'),
+
+    # Cookies
+    path('cookie/get/', views.get_cookie_view, name='cookie_get'),
+    path('cookie/set/', views.set_cookie_view, name='cookie_set'),
+
+    # Session
+    path('session/get/', views.get_session_view, name='session_get'),
+    path('session/set/', views.set_session_view, name='session_set'),
+]
