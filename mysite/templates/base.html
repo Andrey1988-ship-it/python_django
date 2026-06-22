@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>
+    {% block title %}
+      MySite
+    {% endblock %}
+  </title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+    nav { background: #333; padding: 15px; color: white; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; }
+    nav a { color: white; text-decoration: none; }
+    nav a:hover { text-decoration: underline; }
+    nav .user-info { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+    .container { max-width: 1200px; margin: 20px auto; padding: 20px; background: white; border-radius: 5px; }
+    .btn, button { display: inline-block; padding: 8px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; border: none; cursor: pointer; font-size: 14px; }
+    .btn:hover, button:hover { opacity: 0.8; }
+    .btn-success { background: #28a745; }
+    .btn-warning { background: #ffc107; color: black; }
+    .btn-danger { background: #dc3545; }
+    .separator { color: #555; }
+    ul { list-style: none; padding: 0; }
+    ul li { padding: 10px; border-bottom: 1px solid #eee; }
+    ul li:last-child { border-bottom: none; }
+    .messages { margin-bottom: 20px; }
+    .alert { padding: 10px; border-radius: 5px; margin-bottom: 10px; }
+    .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    .alert-warning { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+    .alert-info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+  </style>
+</head>
+<body>
+  <nav>
+    <!-- myauth -->
+    <a href="{% url 'myauth:index' %}">🏠 Главная</a>
+    <a href="{% url 'myauth:cookie_get' %}">🍪 Cookie</a>
+    <a href="{% url 'myauth:session_get' %}">📦 Session</a>
+
+    <span class="separator">|</span>
+
+    <!-- shopapp -->
+    <a href="{% url 'shopapp:shop_index' %}">🏪 Магазин</a>
+    <a href="{% url 'shopapp:products_list' %}">📦 Товары</a>
+    <a href="{% url 'shopapp:orders_list' %}">📋 Заказы</a>
+
+    <span class="separator">|</span>
+
+    <a href="/admin/">🔧 Админка</a>
+
+    <span class="user-info">
+      {% if user.is_authenticated %}
+        <span>👋 {{ user.username }}</span>
+        <a href="{% url 'myauth:profile' %}">👤 Профиль</a>  <!-- 👈 ДОБАВИТЬ -->
+        <form action="{% url 'myauth:logout' %}" method="post" style="display: inline; margin: 0;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger" style="padding: 4px 12px; font-size: 14px;">🚪 Выйти</button>
+        </form>
+      {% else %}
+        <a href="{% url 'myauth:login' %}" class="btn" style="padding: 4px 12px; font-size: 14px;">🔑 Войти</a>
+        <a href="{% url 'myauth:register' %}" class="btn btn-success" style="padding: 4px 12px; font-size: 14px;">📝 Регистрация</a>  <!-- 👈 ДОБАВИТЬ -->
+      {% endif %}
+    </span>
+</nav>
+
+  <div class="container">
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% block content %}
+      <h1>Добро пожаловать!</h1>
+    {% endblock %}
+  </div>
+</body>
+</html>

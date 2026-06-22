@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Товар #{{ product.pk }}{% endblock %}
+
+{% block content %}
+    <h1>Товар: {{ product.name }}</h1>
+    <div>
+        <p>Описание: {{ product.description }}</p>
+        <p>Цена: {{ product.price }}</p>
+        <p>Скидка: {{ product.discount }}</p>
+        <p>Архивирован: {{ product.archived }}</p>
+        <p>Автор: {{ product.created_by|default:"Неизвестен" }}</p>
+    </div>
+
+    <div>
+        <a href="{% url 'shopapp:products_list' %}">← Назад к списку</a>
+    </div>
+
+    {% if perms.shopapp.change_product and product.created_by == user or user.is_superuser %}
+        <div>
+            <a href="{% url 'shopapp:product_update' pk=product.pk %}" class="btn">✏️ Редактировать</a>
+        </div>
+    {% endif %}
+
+    <div>
+        <a href="{% url 'shopapp:product_archive' pk=product.pk %}" class="btn btn-warning">🗄️ Архивировать</a>
+        <a href="{% url 'shopapp:product_delete' pk=product.pk %}" class="btn btn-danger">🗑️ Удалить</a>
+    </div>
+{% endblock %}

@@ -4,35 +4,23 @@
 
 {% block content %}
     <h1>Добро пожаловать!</h1>
-    <p>Это тестовый проект для работы с аутентификацией, cookies и сессиями.</p>
-    
-    <!-- 👇 БЛОК СТАТУСА АВТОРИЗАЦИИ -->
-    <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; margin: 20px 0; background: #f9f9f9;">
-        {% if user.is_authenticated %}
-            <p style="color: green; font-size: 18px;">
-                ✅ Вы авторизованы как <strong>{{ user.username }}</strong>
-            </p>
-            <p>Email: {{ user.email|default:"не указан" }}</p>
-            <form action="{% url 'myauth:logout' %}" method="post" style="display: inline;">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger">🚪 Выйти</button>
-            </form>
-        {% else %}
-            <p style="color: red; font-size: 18px;">
-                ❌ Вы не авторизованы
-            </p>
-            <a href="{% url 'myauth:login' %}" class="btn">🔑 Войти</a>
-        {% endif %}
-    </div>
-    <!-- 👆 КОНЕЦ БЛОКА -->
 
-    <h2>Доступные страницы:</h2>
+    {% if user.is_authenticated %}
+        <p>✅ Вы авторизованы как <strong>{{ user.username }}</strong></p>
+        <p>Email: {{ user.email }}</p>
+    {% else %}
+        <p>🔒 Вы не авторизованы</p>
+    {% endif %}
+
+    <h2>Доступные страницы myauth:</h2>
     <ul>
-        <li><a href="{% url 'myauth:login' %}">🔑 Вход</a></li>
-        <li><a href="{% url 'myauth:logout' %}">🚪 Выход</a></li>
-        <li><a href="{% url 'myauth:cookie_get' %}">🍪 Получить cookie</a></li>
-        <li><a href="{% url 'myauth:cookie_set' %}">🍪 Установить cookie</a></li>
-        <li><a href="{% url 'myauth:session_get' %}">📦 Получить session</a></li>
-        <li><a href="{% url 'myauth:session_set' %}">📦 Установить session</a></li>
-    </ul>
+    <li><a href="{% url 'myauth:login' %}">🔑 Вход</a></li>
+    <li><a href="{% url 'myauth:register' %}">📝 Регистрация</a></li>  <!-- 👈 ДОБАВИТЬ -->
+    <li><a href="{% url 'myauth:logout' %}">🚪 Выход</a></li>
+    <li><a href="{% url 'myauth:profile' %}">👤 Профиль</a></li>       <!-- 👈 ДОБАВИТЬ -->
+    <li><a href="{% url 'myauth:cookie_get' %}">🍪 Получить cookie</a></li>
+    <li><a href="{% url 'myauth:cookie_set' %}">🍪 Установить cookie</a></li>
+    <li><a href="{% url 'myauth:session_get' %}">📦 Получить session</a></li>
+    <li><a href="{% url 'myauth:session_set' %}">📦 Установить session</a></li>
+</ul>
 {% endblock %}

@@ -1,5 +1,5 @@
 from django.urls import path
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
 from . import views
 
 app_name = 'myauth'
@@ -17,6 +17,12 @@ urlpatterns = [
 
     # Выход
     path('logout/', views.CustomLogoutView.as_view(), name='logout'),
+
+    # Регистрация
+    path('register/', views.register_view, name='register'),
+
+    # Профиль
+    path('profile/', views.profile_view, name='profile'),
 
     # Cookies
     path('cookie/get/', views.get_cookie_view, name='cookie_get'),

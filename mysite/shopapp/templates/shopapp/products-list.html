@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Список товаров{% endblock %}
+
+{% block content %}
+    <!-- ОТЛАДКА -->
+    <div style="background: #ffe0e0; padding: 15px; margin-bottom: 20px; border: 2px solid red;">
+        <p><strong>ОТЛАДКА:</strong></p>
+        <p>User: {{ user.username }}</p>
+        <p>is_authenticated: {{ user.is_authenticated }}</p>
+        <p>is_superuser: {{ user.is_superuser }}</p>
+        <p>perms.shopapp.add_product: {{ perms.shopapp.add_product }}</p>
+        <p>perms.shopapp.change_product: {{ perms.shopapp.change_product }}</p>
+    </div>
+    <hr>
+
+    <h1>Товары:</h1>
+
+    {% if perms.shopapp.add_product %}
+        <div>
+            <a href="{% url 'shopapp:product_create' %}" class="btn btn-success">➕ Создать новый товар</a>
+        </div>
+    {% else %}
+        <div style="color: red;">❌ НЕТ ПРАВА НА СОЗДАНИЕ ПРОДУКТА</div>
+    {% endif %}
+
+    {% if products %}
+        <div>
+            {% for product in products %}
+                <div>
+                    <p><a href="{% url 'shopapp:product_detail' pk=product.pk %}">{{ product.name }}</a></p>
+                    <p>Цена: {{ product.price }}</p>
+                    <p>Скидка: {% firstof product.discount 'нет' %}</p>
+                    <p>Автор: {{ product.created_by|default:"Неизвестен" }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <h3>Товаров пока нет</h3>
+    {% endif %}
+{% endblock %}
