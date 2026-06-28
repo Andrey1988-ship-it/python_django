@@ -12,6 +12,7 @@ from .models import Product, Order
 
 
 
+
 class ShopIndexView(View):
     def get(self, request: HttpRequest) -> HttpResponse:
         products = [
@@ -84,10 +85,6 @@ class OrderDetailView(PermissionRequiredMixin, DetailView):
         .prefetch_related("products")
     )
 
-
-from django.http import JsonResponse
-from django.contrib.auth.mixins import UserPassesTestMixin
-from django.views import View
 
 
 class OrdersExportView(UserPassesTestMixin, View):
