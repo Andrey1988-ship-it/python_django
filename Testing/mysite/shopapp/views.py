@@ -1,13 +1,16 @@
 from timeit import default_timer
 
-from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
+from django.http import (HttpResponse, HttpRequest, HttpResponseRedirect,
+                       JsonResponse
+                         )
 from django.shortcuts import render, reverse
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-
+from django.contrib.auth.mixins import (LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin)
 from .models import Product, Order
+
+
 
 
 class ShopIndexView(View):
@@ -81,3 +84,26 @@ class OrderDetailView(PermissionRequiredMixin, DetailView):
         .select_related("user")
         .prefetch_related("products")
     )
+
+
+
+class OrdersExportView(UserPassesTestMixin, View):
+    """Выгрузка заказов в JSON формате (только для is_staff)"""
+
+    def test_func(self):
+        return self.request.user.is_staff
+
+    def get(self, request, *args, **kwargs):
+        orders = Order.objects.select_related('user').prefetch_related('products').all()
+
+        orders_data = []
+        for order in orders:
+            orders_data.append({
+                'id': order.pk,
+                'delivery_address': order.delivery_address,
+                'promocode': order.promocode,
+                'user_id': order.user.pk,
+                'product_ids': [product.pk for product in order.products.all()],
+            })
+
+        return JsonResponse({'orders': orders_data})
