@@ -4,6 +4,7 @@
 
 {% block body %}
 <h1>Профиль пользователя {{ user_obj.username }}</h1>
+
 <div>
     {% if profile.avatar %}
         <img src="{{ profile.avatar.url }}" alt="Аватар" style="max-width: 200px;">
@@ -11,14 +12,9 @@
         <p>Аватар не установлен</p>
     {% endif %}
 </div>
+
 <p>Имя пользователя: {{ user_obj.username }}</p>
 <p>Email: {{ user_obj.email }}</p>
-
-{% if user.is_authenticated %}
-    {% if user.is_staff or user == user_obj %}
-        <a href="{% url 'myauth:update_user_profile' username=user_obj.username %}">Обновить профиль</a>
-    {% endif %}
-{% endif %}
 
 <a href="{% url 'myauth:user_list' %}">Назад к списку</a>
 {% endblock %}

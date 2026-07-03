@@ -4,6 +4,7 @@
 
 {% block body %}
 <h1>Мой профиль</h1>
+
 <div>
     {% if profile.avatar %}
         <img src="{{ profile.avatar.url }}" alt="Аватар" style="max-width: 200px;">
@@ -11,8 +12,15 @@
         <p>Аватар не установлен</p>
     {% endif %}
 </div>
-<p>Имя пользователя: {{ profile.user.username }}</p>
-<p>Email: {{ profile.user.email }}</p>
-<a href="{% url 'myauth:update_my_profile' %}">Обновить профиль</a>
-<a href="{% url 'myauth:user_list' %}">Список пользователей</a>
+
+<p>Имя пользователя: {{ user.username }}</p>
+<p>Email: {{ user.email }}</p>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Обновить аватар</button>
+</form>
+
+<a href="{% url 'myauth:user_list' %}">К списку пользователей</a>
 {% endblock %}
