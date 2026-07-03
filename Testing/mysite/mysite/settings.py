@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 
+from django.conf.global_settings import MEDIA_URL, MEDIA_ROOT
 from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -122,10 +123,12 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+MEDIA_URL= '/media/'
+MEDIA_ROOT= BASE_DIR / 'uploads'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = reverse_lazy("myauth:about-me")
+LOGIN_REDIRECT_URL = reverse_lazy("myauth:about_me")
 LOGIN_URL = reverse_lazy("myauth:login")
