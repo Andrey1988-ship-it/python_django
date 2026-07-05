@@ -23,7 +23,8 @@ from django.contrib import admin
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('shop/', include('shopapp.urls')),
-    path('accounts/', include('myauth.urls')),  # 👈 было 'myauth/', стало 'accounts/'
+    path('accounts/', include('myauth.urls')),
+    path('api/', include('shopapp.api_urls')),
 ]
 
 if settings.DEBUG:
