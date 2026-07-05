@@ -1,0 +1,20 @@
+{% extends 'shopapp/base.html' %}
+
+{% block title %}Профиль пользователя{% endblock %}
+
+{% block body %}
+<h1>Профиль пользователя {{ user_obj.username }}</h1>
+
+<div>
+    {% if profile.avatar %}
+        <img src="{{ profile.avatar.url }}" alt="Аватар" style="max-width: 200px;">
+    {% else %}
+        <p>Аватар не установлен</p>
+    {% endif %}
+</div>
+
+<p>Имя пользователя: {{ user_obj.username }}</p>
+<p>Email: {{ user_obj.email }}</p>
+
+<a href="{% url 'myauth:user_list' %}">Назад к списку</a>
+{% endblock %}
