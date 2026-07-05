@@ -8,8 +8,38 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import (LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin)
-from .models import Product, Order, ProductImage
 from .forms import ProductForm
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.filters import SearchFilter, OrderingFilter
+from .serializers import ProductSerializer, OrderSerializer
+from django.http import JsonResponse
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.views import View
+from .models import Product, Order
+
+
+class ProductViewSet(ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    filter_backends = [
+        SearchFilter,
+        DjangoFilterBackend,
+        OrderingFilter,
+    ]
+    search_fields = ['name','description']
+    filterset_fields = [
+        'name',
+        'description',
+        'price',
+        'discount',
+        'archived'
+    ]
+    ordering_fields = [
+        'name',
+        'price',
+        'discount',
+    ]
 
 
 class ShopIndexView(View):
@@ -38,7 +68,7 @@ class ProductsListView(ListView):
     # model = Product
     context_object_name = "products"
     queryset = Product.objects.filter(archived=False)
-
+    filterset_fields = ['name', 'price', 'archived']
 
 class ProductCreateView(CreateView):
     model = Product
@@ -60,11 +90,6 @@ class ProductUpdateView(UpdateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        for image in form.files.getlist('images'):
-            ProductImage.objects.create(
-                product=self.object,
-                image=image,
-            )
         return response
 
 
@@ -98,11 +123,6 @@ class OrderDetailView(PermissionRequiredMixin, DetailView):
     )
 
 
-from django.http import JsonResponse
-from django.contrib.auth.mixins import UserPassesTestMixin
-from django.views import View
-
-
 class OrdersExportView(UserPassesTestMixin, View):
     """Выгрузка заказов в JSON формате (только для is_staff)"""
 
@@ -123,3 +143,11 @@ class OrdersExportView(UserPassesTestMixin, View):
             })
 
         return JsonResponse({'orders': orders_data})
+
+class OrderViewSet(ModelViewSet):
+    queryset = Order.objects.select_related('user').prefetch_related('products')
+    serializer_class = OrderSerializer
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    filterset_fields = ['user', 'created_at', 'promocode']
+    ordering_fields = ['created_at', 'user']
+    ordering = ['-created_at']
