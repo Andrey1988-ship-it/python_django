@@ -1,0 +1,18 @@
+{% extends 'shopapp/base.html' %}
+
+{% block title %}Мой профиль{% endblock %}
+
+{% block body %}
+<h1>Мой профиль</h1>
+<div>
+    {% if profile.avatar %}
+        <img src="{{ profile.avatar.url }}" alt="Аватар" style="max-width: 200px;">
+    {% else %}
+        <p>Аватар не установлен</p>
+    {% endif %}
+</div>
+<p>Имя пользователя: {{ profile.user.username }}</p>
+<p>Email: {{ profile.user.email }}</p>
+<a href="{% url 'myauth:update_my_profile' %}">Обновить профиль</a>
+<a href="{% url 'myauth:user_list' %}">Список пользователей</a>
+{% endblock %}

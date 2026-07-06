@@ -1,37 +1,29 @@
-from django.contrib.auth.views import LoginView
 from django.urls import path
+from django.contrib.auth.views import LoginView, LogoutView
+from . import views
 
-
-from .views import (
-    get_cookie_view,
-    set_cookie_view,
-    set_session_view,
-    get_session_view,
-    MyLogoutView,
-    AboutMeView,
-    RegisterView,
-)
-
-app_name = "myauth"
+app_name = 'myauth'
 
 urlpatterns = [
-    # path("login/", login_view, name="login"),
-    path(
-        "login/",
-        LoginView.as_view(
-            template_name="myauth/login.html",
-            redirect_authenticated_user=True,
-        ),
-        name="login",
-    ),
-    # path("logout/", logout_view, name="logout"),
-    path("logout/", MyLogoutView.as_view(), name="logout"),
-    path("about-me/", AboutMeView.as_view(), name="about-me"),
-    path("register/", RegisterView.as_view(), name="register"),
+    # Главная страница профиля текущего пользователя
+    path('about-me/', views.MyProfileView.as_view(), name='about_me'),
 
-    path("cookie/get/", get_cookie_view, name="cookie-get"),
-    path("cookie/set/", set_cookie_view, name="cookie-set"),
+    # Список всех пользователей
+    path('users/', views.UserListView.as_view(), name='user_list'),
 
-    path("session/set/", set_session_view, name="session-set"),
-    path("session/get/", get_session_view, name="session-get"),
+    # Детальная страница пользователя (по username)
+    path('user/<str:username>/', views.UserProfileDetailView.as_view(), name='user_detail'),
+
+    # Обновление профиля пользователя (по username)
+    path('user/<str:username>/update/', views.UpdateUserProfileView.as_view(), name='update_user_profile'),
+
+    # Регистрация
+    path('register/', views.RegisterView.as_view(), name='register'),
+
+    # Вход
+    path('login/', LoginView.as_view(template_name='myauth/login.html'), name='login'),
+
+    # Выход (с редиректом на список пользователей или главную)
+    path('logout/', LogoutView.as_view(next_page='/accounts/users/'), name='logout'),
+    path('update-my-profile/', views.UpdateMyProfileView.as_view(), name='update_my_profile'),
 ]
