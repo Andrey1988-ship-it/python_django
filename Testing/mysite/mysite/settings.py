@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'myauth.apps.MyauthConfig',
     'django_filters',
     'blogapp',
+    'django.contrib.sitemaps',
 ]
 
 MIDDLEWARE = [

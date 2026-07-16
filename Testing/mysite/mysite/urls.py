@@ -18,6 +18,9 @@ from django.conf.urls.static import static
 from django.urls import path, include
 from django.conf import settings
 from django.contrib import admin
+from django.contrib.sitemaps.views import sitemap
+from shopapp.sitemaps import ShopSitemap
+
 
 
 urlpatterns = [
@@ -26,6 +29,7 @@ urlpatterns = [
     path('accounts/', include('myauth.urls')),
     path('api/', include('shopapp.api_urls')),
     path('blog/', include('blogapp.urls')),
+    path('sitemap.xml', sitemap, {'sitemaps': {'shop': ShopSitemap}}, name='django.contrib.sitemaps.views.sitemap'),
 ]
 
 if settings.DEBUG:

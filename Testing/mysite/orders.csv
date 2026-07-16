@@ -1,0 +1,4 @@
+user_id,delivery_address,promocode,product_ids
+1,ул. Пушкина 10,SALE123,"1,2"
+2,ул. Ленина 5,,3
+1,пр. Мира 15,DISCOUNT10,"4,5,6"

@@ -17,6 +17,9 @@ from django.http import JsonResponse
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views import View
 from .models import Product, Order
+from django.contrib.syndication.views import Feed
+from django.urls import reverse
+from .models import Product
 
 
 class ProductViewSet(ModelViewSet):
@@ -151,3 +154,20 @@ class OrderViewSet(ModelViewSet):
     filterset_fields = ['user', 'created_at', 'promocode']
     ordering_fields = ['created_at', 'user']
     ordering = ['-created_at']
+
+class LatestProductsFeed(Feed):
+    title = "Latest products"
+    link = "/shop/products/"
+    description = "Updates on products in our shop"
+
+    def items(self):
+        return Product.objects.order_by('-created_at')[:5]
+
+    def item_title(self, item):
+        return item.name
+
+    def item_description(self, item):
+        return item.description[:200]
+
+    def item_link(self, item):
+        return reverse('shopapp:product_details', kwargs={'pk': item.pk})
