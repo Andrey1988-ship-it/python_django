@@ -13,6 +13,7 @@ from .views import (
     OrdersExportView,
     ProductViewSet,
     OrderViewSet,
+    LatestProductsFeed,
 )
 
 app_name = "shopapp"
@@ -32,4 +33,5 @@ urlpatterns = [
     path("orders/", OrdersListView.as_view(), name="orders_list"),
     path("orders/<int:pk>/", OrderDetailView.as_view(), name="order_details"),
     path('orders/export/', OrdersExportView.as_view(), name='orders_export'),
+    path('products/latest/feed/', LatestProductsFeed(), name='products_feed'),
 ]
