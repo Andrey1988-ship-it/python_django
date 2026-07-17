@@ -1,5 +1,8 @@
 from timeit import default_timer
-
+from django.core.cache import cache
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import get_object_or_404
+from django.http import Http404
 from django.http import (HttpResponse, HttpRequest, HttpResponseRedirect,
                        JsonResponse
                          )
@@ -20,7 +23,12 @@ from .models import Product, Order
 from django.contrib.syndication.views import Feed
 from django.urls import reverse
 from .models import Product
-
+from django.contrib.auth.models import User
+from django.core.cache import cache
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
+from .serializers import OrderSerializer   # если у вас есть сериализатор
 
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
@@ -171,3 +179,66 @@ class LatestProductsFeed(Feed):
 
     def item_link(self, item):
         return reverse('shopapp:product_details', kwargs={'pk': item.pk})
+
+# ==================== USER ORDERS (с кешированием) ====================
+
+class UserOrdersListView(LoginRequiredMixin, ListView):
+    """Список заказов конкретного пользователя (только для авторизованных)"""
+    model = Order
+    template_name = 'shopapp/user_orders_list.html'
+    context_object_name = 'orders'
+    paginate_by = 10  # опционально
+
+    def get_queryset(self):
+        self.user_id = self.kwargs.get('user_id')
+        self.owner = get_object_or_404(User, pk=self.user_id)
+
+        cache_key = f'user_orders_data_{self.user_id}'
+        orders = cache.get(cache_key)
+
+        if orders is None:
+            # Загружаем заказы с продуктами через prefetch_related
+            orders = list(
+                Order.objects
+                .filter(user=self.owner)
+                .order_by('pk')
+                .prefetch_related('products')  # 👈 ДОБАВЛЯЕМ
+            )
+            cache.set(cache_key, orders, timeout=300)
+
+        return orders
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['owner'] = self.owner  # передаём в шаблон как owner (не user)
+        return context
+
+
+class UserOrdersExportView(LoginRequiredMixin, View):
+    """Экспорт заказов пользователя в JSON с низкоуровневым кешированием"""
+
+    def get(self, request, *args, **kwargs):
+        user_id = self.kwargs.get('user_id')
+        # Проверяем существование пользователя
+        user = get_object_or_404(User, pk=user_id)
+
+        # Генерируем ключ кеша (уникальный для пользователя)
+        cache_key = f'user_orders_export_{user_id}'
+        cached_data = cache.get(cache_key)
+
+        if cached_data is not None:
+            # Данные найдены в кеше – возвращаем их
+            return JsonResponse(cached_data, safe=False)
+
+        # Данных в кеше нет – загружаем из БД
+        orders = Order.objects.filter(user=user).order_by('pk')
+        # Используем имеющийся сериализатор
+        serializer = OrderSerializer(orders, many=True)
+        data = serializer.data
+        print(f"[DEBUG] Saving cache for user {user_id} with {len(data)} orders")
+        cache.set(cache_key, data, timeout=300)
+        print(f"[DEBUG] Cache saved. Checking: {cache.get(cache_key)}")
+        # Сохраняем в кеш на 5 минут (300 секунд)
+        cache.set(cache_key, data, timeout=300)
+
+        return JsonResponse(data, safe=False)
