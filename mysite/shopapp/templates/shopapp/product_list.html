@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Список товаров{% endblock %}
+
+{% block content %}
+    <h2>Наши товары</h2>
+    
+    <p>Количество товаров: {{ products|length }}</p>
+    <p>Магазин: {{ shop_name|upper }}</p>
+    <p>Покупатель: {{ visitor_name|default:"Гость" }}</p>
+    
+    {% if products %}
+        <ul>
+            {% for product in products %}
+                <li>
+                    <strong>{{ product.name|capfirst }}</strong> - 
+                    {{ product.price }} руб.
+                    {% if product.in_stock %}
+                        <span style="color: green;">(В наличии)</span>
+                    {% else %}
+                        <span style="color: red;">(Нет в наличии)</span>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Товаров пока нет.</p>
+    {% endif %}
+    
+    <p>Текущее время: {{ current_time|date:"H:i:s d.m.Y" }}</p>
+{% endblock %}
